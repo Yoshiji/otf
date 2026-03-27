@@ -36,6 +36,9 @@ type metricsService interface {
 }
 
 func (mc *MetricsCollector) Start(ctx context.Context) error {
+	// Reset gauges to avoid emitting stale values from a previous run.
+	runStatusMetric.Reset()
+
 	// subscribe to run events
 	sub, unsub := mc.service.WatchRuns(ctx)
 	defer unsub()
